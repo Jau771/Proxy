@@ -1,7 +1,6 @@
 #!name=Fuck Telegram bad IPs
 #!desc=Map selected Telegram 91.108.56.x IPs to 91.108.56.147 and 91.108.56.201, then apply the local Host mapping to proxied requests.
-#!author=mieqq / converted for Surge
-#!system=iOS,iPadOS,tvOS,macOS
+#!category=
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png
 
 [General]

@@ -4,7 +4,7 @@ Personal Surge module collection.
 
 ## FKTG
 
-Maps selected Telegram `91.108.56.x` IPs to `91.108.56.147`.
+Maps selected Telegram `91.108.56.x` IPs to `91.108.56.147` and `91.108.56.201`.
 
 Install URL:
 

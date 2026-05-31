@@ -1,4 +1,4 @@
-# Surge
+# Proxy
 
 Personal proxy config collection, organized per app.
 
@@ -18,7 +18,7 @@ Maps selected Telegram `91.108.56.x` IPs to `91.108.56.147` and `91.108.56.201`.
 Install URL:
 
 ```text
-https://raw.githubusercontent.com/Jau771/Surge/main/surge/Modules/FKTG.sgmodule
+https://raw.githubusercontent.com/Jau771/Proxy/main/surge/Modules/FKTG.sgmodule
 ```
 
 Notes:

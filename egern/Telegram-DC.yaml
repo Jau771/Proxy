@@ -1,0 +1,34 @@
+# Telegram 按 DC 分流 — 参考/备份，非规则集
+# 适用: Egern（rules 段使用）
+# 说明: asn/ip_cidr 为 Telegram 各数据中心(DC)网络；
+#       policy(Emby新加坡/美国/欧洲)为本地策略组，需与主配置一致
+# 含完整策略名，可直接回贴
+
+- asn:
+    match: '44907'
+    policy: Emby新加坡
+    no_resolve: true
+- asn:
+    match: '62014'
+    policy: Emby新加坡
+    no_resolve: true
+- asn:
+    match: '59930'
+    policy: Emby美国
+    no_resolve: true
+- asn:
+    match: '62041'
+    policy: Emby欧洲
+    no_resolve: true
+- asn:
+    match: '211157'
+    policy: Emby欧洲
+    no_resolve: true
+- ip_cidr:
+    match: 5.28.192.0/18
+    policy: Emby欧洲
+    no_resolve: true
+- ip_cidr:
+    match: 109.239.140.0/24
+    policy: Emby欧洲
+    no_resolve: true

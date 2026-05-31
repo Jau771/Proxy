@@ -1,0 +1,13 @@
+# Telegram 按 DC 分流 — 参考/备份，非规则集
+# 适用: Surge（[Rule] 段内联使用）
+# 说明: IP-ASN/IP-CIDR 为 Telegram 各数据中心(DC)网络；
+#       策略名(Emby新加坡/美国/欧洲)为本地策略组，需与主配置一致
+# 含完整策略名，可直接回贴
+
+IP-ASN,44907,Emby新加坡,no-resolve
+IP-ASN,62014,Emby新加坡,no-resolve
+IP-ASN,59930,Emby美国,no-resolve
+IP-ASN,62041,Emby欧洲,no-resolve
+IP-ASN,211157,Emby欧洲,no-resolve
+IP-CIDR,5.28.192.0/18,Emby欧洲,no-resolve
+IP-CIDR,109.239.140.0/24,Emby欧洲,no-resolve

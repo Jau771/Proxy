@@ -4,12 +4,12 @@ Personal proxy config collection, organized per app.
 
 ## surge / egern
 
-- `surge/` — Surge configs, modules, and routing-rule snippets.
-- `egern/` — Egern equivalents.
+- `surge/` — Surge configs. `Modules/` for modules, `Rules/` for rule snippets.
+- `egern/` — Egern equivalents (`Rules/`).
 
-Rule snippets here are reference/backups for quick copy-paste, not hosted
-rule-sets. They keep full policy names so they can be pasted straight back
-into a main config. More files will be added over time.
+Rule snippets under `Rules/` are reference/backups for quick copy-paste, not
+hosted rule-sets. They keep full policy names so they can be pasted straight
+back into a main config. More files will be added over time.
 
 ## FKTG
 

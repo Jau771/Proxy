@@ -73,6 +73,7 @@ export default async function (ctx) {
   const refreshTime = new Date(Date.now() + 6*60*60*1000).toISOString();
 
   const backgroundColor = { light: "#FFFFFF", dark: "#1C1C1E" };
+  const transparentColor = { light: "rgba(0,0,0,0)", dark: "rgba(0,0,0,0)" };
 
   const COLORS = {
     primary: { light: "#1A1A1A", dark: "#FFFFFF" },
@@ -231,6 +232,37 @@ export default async function (ctx) {
   ].filter(r => r.price !== null);
 
   function priceCard(row){
+    if (isTransparentMode) {
+      return {
+        type:"stack",
+        direction:"column",
+        alignItems:"center",
+        justifyContent:"center",
+        gap:2,
+        backgroundColor: transparentColor,
+        children:[
+          {
+            type:"text",
+            text:row.label,
+            font:{size:11,weight:"bold"},
+            textColor: row.color,
+            textAlign:"center",
+            lineLimit:1,
+            minScale:0.8
+          },
+          {
+            type:"text",
+            text:row.price !== null ? row.price.toFixed(2) : "--",
+            font:{size:19,weight:"semibold"},
+            textColor: { light: "#FFFFFF", dark: "#FFFFFF" },
+            textAlign:"center",
+            lineLimit:1,
+            minScale:0.75
+          }
+        ]
+      };
+    }
+
     const cardBackground = isTransparentMode
       ? { light: "#1C1C1E", dark: "#1C1C1E" }
       : COLORS.card;
@@ -340,6 +372,7 @@ export default async function (ctx) {
         justifyContent:"space-between",
         gap:6,
         padding:[6,0,6,0],
+        ...(isTransparentMode ? { backgroundColor: transparentColor } : {}),
         children: rows.map(priceCard)
       } : {
         type:"stack",

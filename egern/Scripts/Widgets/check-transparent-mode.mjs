@@ -140,6 +140,20 @@ function findFirstText(node, predicate) {
   return null;
 }
 
+function findFirstStack(node, predicate) {
+  if (!node || typeof node !== 'object') return null;
+  if (node.type === 'stack' && predicate(node)) return node;
+  for (const key of ['children']) {
+    if (Array.isArray(node[key])) {
+      for (const child of node[key]) {
+        const found = findFirstStack(child, predicate);
+        if (found) return found;
+      }
+    }
+  }
+  return null;
+}
+
 async function loadWidget(fileName) {
   const url = new URL(fileName, import.meta.url);
   const source = await readFile(url, 'utf8');
@@ -163,6 +177,8 @@ for (const fileName of scripts) {
     assert.ok(priceText, 'Oil_Widget.js must render a numeric price in transparent mode');
     const titleText = findFirstText(transparentWidget, (node) => /实时油价/.test(String(node.text)));
     assert.ok(titleText, 'Oil_Widget.js must render the title in transparent mode');
+    const priceRow = findFirstStack(transparentWidget, (node) => node.direction === 'row' && Array.isArray(node.children) && node.children.length === 4);
+    assert.ok(priceRow, 'Oil_Widget.js must render a four-column price row in transparent mode');
   }
 
   const normalWidget = await renderWidget(makeContext());

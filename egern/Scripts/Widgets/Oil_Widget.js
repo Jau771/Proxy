@@ -67,6 +67,8 @@ export default async function (ctx) {
   const regionParam = ctx.env.region || "hainan/haikou";
   const SHOW_TREND = (ctx.env.SHOW_TREND || "true").trim() !== "false";
   const isTransparentMode = String(ctx.env.TRANSPARENT_MODE || "").trim().toLowerCase() === "true";
+  const widgetFamily = ctx.widgetFamily || "systemMedium";
+  const isSmallWidget = widgetFamily === "systemSmall";
 
   const now = new Date();
   const timeStr = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
@@ -74,6 +76,18 @@ export default async function (ctx) {
 
   const backgroundColor = { light: "#FFFFFF", dark: "#1C1C1E" };
   const transparentColor = { light: "rgba(0,0,0,0)", dark: "rgba(0,0,0,0)" };
+  const titleFont = isSmallWidget ? { size: 10, weight: "semibold" } : { size: "caption2", weight: "semibold" };
+  const trendFont = isSmallWidget ? { size: 9 } : { size: "caption2" };
+  const labelFont = isSmallWidget ? { size: 9, weight: "bold" } : { size: "caption2", weight: "bold" };
+  const priceFont = isSmallWidget ? { size: 14, weight: "semibold" } : { size: 19, weight: "semibold" };
+  const footerFont = isSmallWidget ? { size: 9 } : { size: "caption2" };
+  const cardPadding = isSmallWidget ? [3, 1, 3, 1] : [4, 2, 4, 2];
+  const headerPadding = isSmallWidget ? [0, 2, 0, 2] : [0, 4, 0, 4];
+  const footerPadding = isSmallWidget ? [0, 2, 0, 2] : [0, 4, 0, 4];
+  const rowPadding = isSmallWidget ? [4, 0, 4, 0] : [6, 0, 6, 0];
+  const rowGap = isSmallWidget ? 4 : 6;
+  const priceMinScale = isSmallWidget ? 0.6 : 0.75;
+  const labelMinScale = isSmallWidget ? 0.72 : 0.8;
 
   const COLORS = {
     primary: { light: "#1A1A1A", dark: "#FFFFFF" },
@@ -238,26 +252,28 @@ export default async function (ctx) {
         direction:"column",
         alignItems:"center",
         justifyContent:"center",
-        gap:2,
+        flex:1,
+        gap:1,
+        padding: cardPadding,
         backgroundColor: transparentColor,
         children:[
           {
             type:"text",
             text:row.label,
-            font:{size:11,weight:"bold"},
+            font: labelFont,
             textColor: row.color,
             textAlign:"center",
             lineLimit:1,
-            minScale:0.8
+            minScale: labelMinScale
           },
           {
             type:"text",
             text:row.price !== null ? row.price.toFixed(2) : "--",
-            font:{size:19,weight:"semibold"},
+            font: priceFont,
             textColor: { light: "#FFFFFF", dark: "#FFFFFF" },
             textAlign:"center",
             lineLimit:1,
-            minScale:0.75
+            minScale: priceMinScale
           }
         ]
       };
@@ -322,7 +338,7 @@ export default async function (ctx) {
         {
           type:"text",
           text:row.price !== null ? row.price.toFixed(2) : "--",
-          font:{size:"title3",weight:"semibold"},
+          font:{size:isSmallWidget ? 15 : "title3",weight:"semibold"},
           textColor: cardTextColor,
           textAlign:"center",
           lineLimit:1,
@@ -334,7 +350,7 @@ export default async function (ctx) {
 
   return {
     type:"widget",
-    padding:[10,8,10,8],
+    padding:isSmallWidget ? [8,6,8,6] : [10,8,10,8],
     gap:5,
     ...(isTransparentMode ? {} : { backgroundColor }),
     refreshAfter:refreshTime,
@@ -344,24 +360,24 @@ export default async function (ctx) {
         direction:"row",
         alignItems:"center",
         gap:4,
-        padding:[0,4,0,4],
+        padding: headerPadding,
         children:[
           {type:"image",src:"sf-symbol:fuelpump.fill",width:13,height:13,color:COLORS.p92},
-          {type:"text",text:titleText,font:{size:"caption2",weight:"semibold"},textColor:COLORS.secondary},
+          {type:"text",text:titleText,font:titleFont,textColor:COLORS.secondary,lineLimit:1,minScale:isSmallWidget ? 0.72 : 0.8},
           {type:"spacer"},
           // 🔹 右上角调价信息
           ...(SHOW_TREND && trendInfo ? [{
             type:"text",
             text: trendInfo,
-            font:{size:"caption2"},
+            font: trendFont,
             textColor: COLORS.trend,
             textAlign:"right",
             lineLimit:1,
-            minScale: 0.8
+            minScale: isSmallWidget ? 0.7 : 0.8
           }] : []),
           // 错误信息
           ...(fetchError ? [{
-            type:"text",text:errorMsg,font:{size:"caption2"},textColor:COLORS.p98
+            type:"text",text:errorMsg,font:trendFont,textColor:COLORS.p98
           }] : [])
         ].filter(Boolean)
       },
@@ -370,8 +386,8 @@ export default async function (ctx) {
         direction:"row",
         alignItems:"center",
         justifyContent:"space-between",
-        gap:6,
-        padding:[6,0,6,0],
+        gap: rowGap,
+        padding: rowPadding,
         ...(isTransparentMode ? { backgroundColor: transparentColor } : {}),
         children: rows.map(priceCard)
       } : {
@@ -389,11 +405,11 @@ export default async function (ctx) {
         type:"stack",
         direction:"row",
         alignItems:"center",
-        padding:[0,4,0,4],
+        padding: footerPadding,
         children:[
-          {type:"text",text:`${timeStr} 更新`,font:{size:"caption2"},textColor:COLORS.tertiary},
+          {type:"text",text:`${timeStr} 更新`,font:footerFont,textColor:COLORS.tertiary,lineLimit:1,minScale:0.8},
           {type:"spacer"},
-          {type:"text",text:"元/升",font:{size:"caption2"},textColor:COLORS.tertiary}
+          {type:"text",text:"元/升",font:footerFont,textColor:COLORS.tertiary,lineLimit:1,minScale:0.8}
         ]
       }
     ]

@@ -181,6 +181,15 @@ for (const fileName of scripts) {
     assert.ok(priceRow, 'Oil_Widget.js must render a four-column price row in transparent mode');
   }
 
+  if (fileName === 'ip-dch.js') {
+    const titleText = findFirstText(transparentWidget, (node) => /数据中心/.test(String(node.text)));
+    assert.ok(titleText, 'ip-dch.js must render the title in transparent mode');
+    const localIpLabel = findFirstText(transparentWidget, (node) => /本地IP/.test(String(node.text)));
+    assert.ok(localIpLabel, 'ip-dch.js must render local IP details in transparent mode');
+    const landingIpLabel = findFirstText(transparentWidget, (node) => /落地IP/.test(String(node.text)));
+    assert.ok(landingIpLabel, 'ip-dch.js must render landing IP details in transparent mode');
+  }
+
   const normalWidget = await renderWidget(makeContext());
   assert.equal(normalWidget.type, 'widget', `${fileName} must render without TRANSPARENT_MODE`);
 }

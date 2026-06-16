@@ -25,4 +25,4 @@ mode can render the content instead of showing a blank white panel.
 - `Oil_Widget.js`: `https://raw.githubusercontent.com/IBL3ND/module/refs/heads/main/Oil_Widget.JS`
 - `Holiday_Countdown.js`: `https://raw.githubusercontent.com/IBL3ND/module/refs/heads/main/Holiday_Countdown.js`
 - `Network-Pro.js`: `https://raw.githubusercontent.com/xcgtb/Egern-Widgets/main/Network-Pro.js`
-- `ip-dch.js`: `https://raw.githubusercontent.com/shadowlynx319/Egern/main/ip-dch.js`
+- `ip-dch.js`: `https://raw.githubusercontent.com/Linsars/Surge/main/JS/egern-ipDCH.js`

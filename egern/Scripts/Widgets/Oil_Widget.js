@@ -231,6 +231,31 @@ export default async function (ctx) {
   ].filter(r => r.price !== null);
 
   function priceCard(row){
+    const cardBackground = isTransparentMode
+      ? { light: "#1C1C1E", dark: "#1C1C1E" }
+      : COLORS.card;
+    const cardBorder = isTransparentMode
+      ? { light: "#3A3A3C", dark: "#3A3A3C" }
+      : COLORS.cardBorder;
+    const cardTextColor = isTransparentMode
+      ? { light: "#F2F2F7", dark: "#F2F2F7" }
+      : COLORS.primary;
+    const labelTextColor = isTransparentMode
+      ? { light: row.color.dark, dark: row.color.dark }
+      : row.color;
+    const labelBackground = isTransparentMode
+      ? { light: "rgba(255,255,255,0.08)", dark: "rgba(255,255,255,0.08)" }
+      : {
+          light: row.color.light + "28",
+          dark: row.color.dark + "28"
+        };
+    const labelBorder = isTransparentMode
+      ? { light: "rgba(255,255,255,0.12)", dark: "rgba(255,255,255,0.12)" }
+      : {
+          light: row.color.light + "55",
+          dark: row.color.dark + "55"
+        };
+
     return {
       type:"stack",
       direction:"column",
@@ -238,10 +263,10 @@ export default async function (ctx) {
       justifyContent:"center",
       flex:1,
       padding:[8,4,8,4],
-      backgroundColor: COLORS.card,
       borderRadius:12,
+      backgroundColor: cardBackground,
       borderWidth: 0.5,
-      borderColor: COLORS.cardBorder,
+      borderColor: cardBorder,
       children:[
         {
           type:"stack",
@@ -250,21 +275,15 @@ export default async function (ctx) {
           justifyContent:"center",
           width:44,
           height:22,
-          backgroundColor: {
-            light: row.color.light + "28",
-            dark: row.color.dark + "28"
-          },
           borderRadius:6,
+          backgroundColor: labelBackground,
           borderWidth:0.5,
-          borderColor: {
-            light: row.color.light + "55",
-            dark: row.color.dark + "55"
-          },
+          borderColor: labelBorder,
           children:[{
             type:"text",
             text:row.label,
             font:{size:"caption2",weight:"bold"},
-            textColor: row.color,
+            textColor: labelTextColor,
             textAlign:"center"
           }]
         },
@@ -272,7 +291,7 @@ export default async function (ctx) {
           type:"text",
           text:row.price !== null ? row.price.toFixed(2) : "--",
           font:{size:"title3",weight:"semibold"},
-          textColor: COLORS.primary,
+          textColor: cardTextColor,
           textAlign:"center",
           lineLimit:1,
           minScale:0.7

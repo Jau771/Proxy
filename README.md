@@ -14,7 +14,7 @@ back into a main config. More files will be added over time.
 Current snippets:
 
 - `surge/Rules/Telegram-DC.list` — Telegram DC IP mapping reference
-- `surge/Rules/Gemini.list` — Gemini / Google AI domain subset for direct copy into Surge rules
+- `surge/Rules/Gemini.list` — Gemini supplement for filling gaps in the existing `Extra_AI.list`
 
 ## FKTG
 

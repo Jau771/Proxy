@@ -11,6 +11,11 @@ Rule snippets under `Rules/` are reference/backups for quick copy-paste, not
 hosted rule-sets. They keep full policy names so they can be pasted straight
 back into a main config. More files will be added over time.
 
+Current snippets:
+
+- `surge/Rules/Telegram-DC.list` — Telegram DC IP mapping reference
+- `surge/Rules/Gemini.list` — Gemini / Google AI domain subset for direct copy into Surge rules
+
 ## FKTG
 
 Maps selected Telegram `91.108.56.x` IPs to `91.108.56.147` and `91.108.56.201`.

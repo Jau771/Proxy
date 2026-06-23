@@ -1,8 +1,9 @@
 # Gemini 补充规则
-# Source: fmz200 AI.list minus current Extra_AI.list Gemini coverage
-# Usage: paste this after the existing Extra_AI.list if you want only missing Gemini-related domains
+# Source: uncovered Gemini domains and policy override supplements
+# Usage: place this before broader Google rules so exact Gemini hosts take precedence
 
 DOMAIN,aida.googleapis.com
 DOMAIN,aistudio.google.com
 DOMAIN,alkalicore-pa.clients6.google.com
+DOMAIN,gemini.gstatic.com
 DOMAIN,geller-pa.googleapis.com

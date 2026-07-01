@@ -12,6 +12,13 @@ const REQUEST_PROFILES = [
   {
     method: 'head',
     headers: {
+      'User-Agent': 'clash.meta/1.19.20',
+      Accept: 'application/x-yaml,text/plain,*/*',
+    },
+  },
+  {
+    method: 'head',
+    headers: {
       'User-Agent': 'Quantumult%20X/1.5.2',
       Accept: '*/*',
     },

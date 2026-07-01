@@ -88,6 +88,24 @@ const baseArgument = [
   'payload=奶昔<<SurgePanelField>>https://token.example/sub?token=secret<<SurgePanelField>>1',
 ].join('&');
 
+test('tries clash meta user agent before Quantumult', async () => {
+  const { requests } = await runScript({
+    argument: baseArgument,
+    responses: [
+      {
+        response: {
+          status: 200,
+          headers: {
+            'subscription-userinfo': 'upload=1; download=1; total=10; expire=1811808000',
+          },
+        },
+      },
+    ],
+  });
+
+  assert.equal(requests[0].request.headers['User-Agent'], 'clash.meta/1.19.20');
+});
+
 test('writes a sanitized cache entry after successful subscription fetch', async () => {
   const { doneValue, writes } = await runScript({
     argument: baseArgument,

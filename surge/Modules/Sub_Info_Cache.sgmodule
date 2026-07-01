@@ -1,0 +1,11 @@
+#!name=机场订阅流量面板（缓存增强版）
+#!desc=显示最多 10 个机场订阅流量；请求失败时优先显示上次成功缓存，不暴露订阅 URL。
+#!category=机场流量信息
+#!arguments=面板名称:机场订阅流量,隐藏更新时间:off,机场名称1:机场1,URL1:订阅链接1,重置日1:可选,机场名称2:机场2,URL2:订阅链接2,重置日2:可选,机场名称3:机场3,URL3:订阅链接3,重置日3:可选,机场名称4:机场4,URL4:订阅链接4,重置日4:可选,机场名称5:机场5,URL5:订阅链接5,重置日5:可选,机场名称6:机场6,URL6:订阅链接6,重置日6:可选,机场名称7:机场7,URL7:订阅链接7,重置日7:可选,机场名称8:机场8,URL8:订阅链接8,重置日8:可选,机场名称9:机场9,URL9:订阅链接9,重置日9:可选,机场名称10:机场10,URL10:订阅链接10,重置日10:可选
+#!arguments-desc=[参数设置]\n\n1. 直接填写原始机场订阅链接。\n2. 请求成功时写入缓存；请求失败时显示上次成功数据，并追加“缓存：HH:mm”。\n3. 没有缓存且请求失败时，只显示“获取失败（无缓存）”，不会显示完整订阅 URL。\n4. 机场名称建议固定不变；缓存 key 基于序号和机场名称生成，方便奶昔这类短期订阅链接继续复用旧数据。\n5. 重置日可留空；填写 1-31 时显示距离下次重置的天数。\n6. 隐藏更新时间填 on 时，标题不显示当前刷新时间。
+
+[Panel]
+机场订阅流量=script-name=机场订阅流量,update-interval=3600
+
+[Script]
+机场订阅流量=type=generic,timeout=20,script-path=https://raw.githubusercontent.com/Jau771/Proxy/main/surge/Modules/Sub_Info_Cache.js,script-update-interval=0,argument=panel_title={{{面板名称}}}&hide_update_time={{{隐藏更新时间}}}&payload={{{机场名称1}}}<<SurgePanelField>>{{{URL1}}}<<SurgePanelField>>{{{重置日1}}}<<SurgePanelSlot>>{{{机场名称2}}}<<SurgePanelField>>{{{URL2}}}<<SurgePanelField>>{{{重置日2}}}<<SurgePanelSlot>>{{{机场名称3}}}<<SurgePanelField>>{{{URL3}}}<<SurgePanelField>>{{{重置日3}}}<<SurgePanelSlot>>{{{机场名称4}}}<<SurgePanelField>>{{{URL4}}}<<SurgePanelField>>{{{重置日4}}}<<SurgePanelSlot>>{{{机场名称5}}}<<SurgePanelField>>{{{URL5}}}<<SurgePanelField>>{{{重置日5}}}<<SurgePanelSlot>>{{{机场名称6}}}<<SurgePanelField>>{{{URL6}}}<<SurgePanelField>>{{{重置日6}}}<<SurgePanelSlot>>{{{机场名称7}}}<<SurgePanelField>>{{{URL7}}}<<SurgePanelField>>{{{重置日7}}}<<SurgePanelSlot>>{{{机场名称8}}}<<SurgePanelField>>{{{URL8}}}<<SurgePanelField>>{{{重置日8}}}<<SurgePanelSlot>>{{{机场名称9}}}<<SurgePanelField>>{{{URL9}}}<<SurgePanelField>>{{{重置日9}}}<<SurgePanelSlot>>{{{机场名称10}}}<<SurgePanelField>>{{{URL10}}}<<SurgePanelField>>{{{重置日10}}}

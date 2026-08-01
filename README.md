@@ -30,3 +30,25 @@ Notes:
 
 - This module enables `use-local-host-item-for-proxy = true` so proxied requests can use the local `[Host]` IP mappings.
 - Use it only if Telegram has connection quality issues. Telegram IP availability may change over time.
+
+## Bilibili CDN Redirect
+
+Files:
+
+- `surge/Modules/Bilibili_CDN_Redirect.sgmodule` — Surge module definition.
+- `surge/Modules/Bilibili_CDN_Redirect.js` — `http-response` JSON rewrite script.
+
+The module targets Bilibili playback APIs on `api.bilibili.com` and
+`app.bilibili.com`. It rewrites media `baseUrl`/`base_url` hosts and keeps the
+original primary and backup URLs in the fallback list. Akamai URLs are left
+untouched because their `hdnts` token may be bound to the original host.
+
+Requirements and limitations:
+
+- Surge MITM must be enabled and trusted on the device; the module appends the
+  two API hostnames to `[MITM]`.
+- The Bilibili app traffic must actually pass through Surge. Certificate
+  pinning or a changed playback endpoint can prevent the script from running.
+- CDN speed is location- and time-dependent. Benchmark the default or a
+  custom host and disable the module (`enabled=false` or `cdn=original`) if a
+  selected host is slower or returns an error.

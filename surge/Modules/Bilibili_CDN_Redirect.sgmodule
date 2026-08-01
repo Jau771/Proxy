@@ -1,0 +1,11 @@
+#!name=Bilibili CDN Redirect (iOS Mac)
+#!category=Media
+#!desc=改写 Bilibili 播放接口中的媒体 CDN 主机名，保留原始链接作为回退；适用于 iOS 与 Mac 客户端。
+#!arguments=cdn=cn-jxnc-cmcc-bcache-06.bilivideo.com&cdnBackup=upos-sz-mirrorhwb.bilivideo.com&enabled=true&logLevel=WARN
+#!arguments-desc=cdn: 主链路目标 CDN 主机名；默认值来自社区 TW/SG 实测候选，填 original/base/off 可关闭改写。\n\ncdnBackup: 备用链路目标 CDN 主机名；填 original/base/off 可保留 B 站原始备用地址。\n\nenabled: true/false，总开关。\n\nlogLevel: ERROR/WARN/INFO/DEBUG，默认 WARN。
+
+[Script]
+Bilibili_CDN_Redirect = type=http-response,pattern=^https?:\/\/(?:api|app)\.bilibili\.com\/(?:x\/player\/(?:(?:wbi\/)?playurl|wbi\/v2)|(?:pgc|pugv)\/player\/web\/v\d+\/playurl|x\/v\d+\/playurl),requires-body=1,engine=jsc,script-path=https://raw.githubusercontent.com/Jau771/Proxy/main/surge/Modules/Bilibili_CDN_Redirect.js,max-size=524288,argument=cdn=%cdn%&cdn_backup=%cdnBackup%&enabled=%enabled%&log_level=%logLevel%,debug=false
+
+[MITM]
+hostname = %APPEND% api.bilibili.com, app.bilibili.com

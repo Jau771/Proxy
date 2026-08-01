@@ -122,6 +122,22 @@ test("rewrites an actual upgcxcode request and updates Host", () => {
   assert.match(result.url, /upsig=one$/);
 });
 
+test("copies request headers before changing Host", () => {
+  const headers = Object.freeze({
+    Host: "upos-sz-mirrorcosov.bilivideo.com",
+    Range: "bytes=0-10",
+  });
+  const result = runScript({
+    argument: "cdn=cn-hk-eq-01-09.bilivideo.com",
+    request: {
+      url: "https://upos-sz-mirrorcosov.bilivideo.com/upgcxcode/video.m4s",
+      headers,
+    },
+  });
+  assert.equal(result.headers.Range, "bytes=0-10");
+  assert.equal(result.headers.Host, "cn-hk-eq-01-09.bilivideo.com");
+});
+
 test("keeps Akamai request hosts unchanged", () => {
   const originalUrl =
     "https://upos-hz-mirrorakam.akamaized.net/upgcxcode/video.m4s?hdnts=bound";

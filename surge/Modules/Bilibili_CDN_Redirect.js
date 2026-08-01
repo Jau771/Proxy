@@ -99,29 +99,30 @@
       return;
     }
 
-    var requestHost = hostFromUrl($request.url);
-    var requestPath = $request.url.replace(/^https?:\/\/[^/]+/i, "").split(/[?#]/, 1)[0];
-    log("INFO", "observed request " + requestHost + requestPath);
-
+    var originalUrl = $request.url;
+    var requestHost = hostFromUrl(originalUrl);
     var primaryTarget = normalizeTarget(ARGUMENT.cdn, DEFAULT_CDN);
-    if (!primaryTarget || !isCandidateMediaUrl($request.url)) {
+    if (!primaryTarget || !isCandidateMediaUrl(originalUrl)) {
       finish({});
       return;
     }
 
-    var rewrittenUrl = replaceHost($request.url, primaryTarget);
-    if (rewrittenUrl === $request.url) {
+    var rewrittenUrl = replaceHost(originalUrl, primaryTarget);
+    if (rewrittenUrl === originalUrl) {
       finish({});
       return;
     }
 
-    var headers = $request.headers || {};
-    var originalHost = hostFromUrl($request.url);
+    var headers = {};
+    var sourceHeaders = $request.headers || {};
+    Object.keys(sourceHeaders).forEach(function (key) {
+      headers[key] = sourceHeaders[key];
+    });
     var targetHost = hostFromUrl(rewrittenUrl);
-    if (originalHost && targetHost) {
+    if (targetHost) {
       headers.Host = targetHost;
     }
-    log("INFO", "rewrote request " + originalHost + " -> " + targetHost);
+    log("INFO", "rewrote request " + requestHost + " -> " + targetHost);
     finish({ url: rewrittenUrl, headers: headers });
   }
 
@@ -300,7 +301,8 @@
   try {
     main();
   } catch (error) {
-    log("ERROR", "unexpected script error");
+    var detail = error && (error.message || error.name);
+    log("ERROR", "unexpected script error" + (detail ? ": " + detail : ""));
     finish({});
   }
 })();

@@ -3,6 +3,11 @@ import fs from "node:fs";
 import test from "node:test";
 import vm from "node:vm";
 
+const moduleText = fs.readFileSync(
+  new URL("../surge/Modules/Bilibili_CDN_Redirect.sgmodule", import.meta.url),
+  "utf8",
+);
+
 const script = fs.readFileSync(
   new URL("../surge/Modules/Bilibili_CDN_Redirect.js", import.meta.url),
   "utf8",
@@ -85,4 +90,15 @@ test("returns untouched response when disabled", () => {
   const payload = fixture();
   const result = runScript({ argument: "enabled=false", payload });
   assert.equal(Object.keys(result).length, 0);
+});
+
+test("uses iOS-compatible module arguments and Surge placeholders", () => {
+  assert.match(
+    moduleText,
+    /^#!arguments=cdn:[^,]+,cdnBackup:[^,]+,enabled:true,logLevel:WARN$/m,
+  );
+  assert.match(moduleText, /argument=cdn=\{\{\{cdn\}\}\}/);
+  assert.match(moduleText, /cdn_backup=\{\{\{cdnBackup\}\}\}/);
+  assert.match(moduleText, /enabled=\{\{\{enabled\}\}\}/);
+  assert.match(moduleText, /log_level=\{\{\{logLevel\}\}\}/);
 });

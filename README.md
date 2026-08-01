@@ -47,6 +47,9 @@ Requirements and limitations:
 
 - Surge MITM must be enabled and trusted on the device; the module appends the
   two API hostnames to `[MITM]`.
+- On iOS, install the latest module after updates. The parameter table uses the
+  iOS-compatible `key:value,key:value` form, and the module forwards values
+  with Surge's `{{{parameter}}}` placeholders.
 - The Bilibili app traffic must actually pass through Surge. Certificate
   pinning or a changed playback endpoint can prevent the script from running.
 - CDN speed is location- and time-dependent. Benchmark the default or a

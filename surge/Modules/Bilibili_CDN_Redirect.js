@@ -85,7 +85,44 @@
 
   function replaceHost(value, target) {
     if (!target || !isCandidateMediaUrl(value)) return value;
-    return value.replace(/^https?:\/\/[^/]+/i, "https://" + target);
+    return value.replace(/^(https?):\/\/[^/]+/i, "$1://" + target);
+  }
+
+  function hostFromUrl(value) {
+    var match = typeof value === "string" && value.match(/^https?:\/\/([^/]+)/i);
+    return match ? match[1] : "";
+  }
+
+  function rewriteRequest() {
+    if (typeof $request === "undefined" || !$request || typeof $request.url !== "string") {
+      finish({});
+      return;
+    }
+
+    var requestHost = hostFromUrl($request.url);
+    var requestPath = $request.url.replace(/^https?:\/\/[^/]+/i, "").split(/[?#]/, 1)[0];
+    log("INFO", "observed request " + requestHost + requestPath);
+
+    var primaryTarget = normalizeTarget(ARGUMENT.cdn, DEFAULT_CDN);
+    if (!primaryTarget || !isCandidateMediaUrl($request.url)) {
+      finish({});
+      return;
+    }
+
+    var rewrittenUrl = replaceHost($request.url, primaryTarget);
+    if (rewrittenUrl === $request.url) {
+      finish({});
+      return;
+    }
+
+    var headers = $request.headers || {};
+    var originalHost = hostFromUrl($request.url);
+    var targetHost = hostFromUrl(rewrittenUrl);
+    if (originalHost && targetHost) {
+      headers.Host = targetHost;
+    }
+    log("INFO", "rewrote request " + originalHost + " -> " + targetHost);
+    finish({ url: rewrittenUrl, headers: headers });
   }
 
   function unique(values) {
@@ -201,6 +238,15 @@
   function main() {
     if (!isEnabled()) {
       finish({});
+      return;
+    }
+
+    if (
+      typeof $response === "undefined" ||
+      !$response ||
+      typeof $response.body !== "string"
+    ) {
+      rewriteRequest();
       return;
     }
 

@@ -36,17 +36,20 @@ Notes:
 Files:
 
 - `surge/Modules/Bilibili_CDN_Redirect.sgmodule` — Surge module definition.
-- `surge/Modules/Bilibili_CDN_Redirect.js` — `http-response` JSON rewrite script.
+- `surge/Modules/Bilibili_CDN_Redirect.js` — request host rewrite plus
+  `http-response` JSON rewrite script.
 
-The module targets Bilibili playback APIs on `api.bilibili.com` and
-`app.bilibili.com`. It rewrites media `baseUrl`/`base_url` hosts and keeps the
-original primary and backup URLs in the fallback list. Akamai URLs are left
-untouched because their `hdnts` token may be bound to the original host.
+The module rewrites actual `upgcxcode`/`v1/resource` media requests before they
+connect, which covers native iOS/Mac playback even when the app's playurl API
+response is not visible. It also rewrites media `baseUrl`/`base_url` hosts in
+playurl responses and keeps the original primary and backup URLs in the
+fallback list. Akamai URLs are logged but left untouched because their `hdnts`
+token may be bound to the original host.
 
 Requirements and limitations:
 
-- Surge MITM must be enabled and trusted on the device; the module appends the
-  two API hostnames to `[MITM]`.
+- Surge MITM must be enabled and trusted on the device; the module appends
+  Bilibili API and media CDN hostnames to `[MITM]`.
 - On iOS, install the latest module after updates. The parameter table uses the
   iOS-compatible `key:value,key:value` form, and the module forwards values
   with Surge's `{{{parameter}}}` placeholders.

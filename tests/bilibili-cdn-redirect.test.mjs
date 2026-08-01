@@ -13,17 +13,22 @@ const script = fs.readFileSync(
   "utf8",
 );
 
-function runScript({ argument = "", payload }) {
+function runScript({ argument = "", payload, request }) {
   let doneValue;
   const sandbox = {
     $argument: argument,
-    $response: { body: JSON.stringify(payload) },
     $done(value) {
       doneValue = value;
     },
     console,
     decodeURIComponent,
   };
+  if (request) {
+    sandbox.$request = request;
+  } else {
+    sandbox.$request = { url: "https://api.bilibili.com/x/player/playurl" };
+    sandbox.$response = { body: JSON.stringify(payload) };
+  }
   vm.createContext(sandbox);
   vm.runInContext(script, sandbox, { filename: "Bilibili_CDN_Redirect.js" });
   return doneValue;
@@ -95,10 +100,34 @@ test("returns untouched response when disabled", () => {
 test("uses iOS-compatible module arguments and Surge placeholders", () => {
   assert.match(
     moduleText,
-    /^#!arguments=cdn:[^,]+,cdnBackup:[^,]+,enabled:true,logLevel:WARN$/m,
+    /^#!arguments=cdn:[^,]+,cdnBackup:[^,]+,enabled:true,logLevel:INFO$/m,
   );
   assert.match(moduleText, /argument=cdn=\{\{\{cdn\}\}\}/);
   assert.match(moduleText, /cdn_backup=\{\{\{cdnBackup\}\}\}/);
   assert.match(moduleText, /enabled=\{\{\{enabled\}\}\}/);
   assert.match(moduleText, /log_level=\{\{\{logLevel\}\}\}/);
+  assert.match(moduleText, /type=http-request/);
+  assert.match(moduleText, /\*\.bilivideo\.com/);
+});
+
+test("rewrites an actual upgcxcode request and updates Host", () => {
+  const originalUrl =
+    "https://upos-sz-mirrorcosov.bilivideo.com/upgcxcode/video.m4s?upsig=one";
+  const result = runScript({
+    argument: "cdn=cn-hk-eq-01-09.bilivideo.com",
+    request: { url: originalUrl, headers: { Host: "upos-sz-mirrorcosov.bilivideo.com" } },
+  });
+  assert.match(result.url, /^https:\/\/cn-hk-eq-01-09\.bilivideo\.com\//);
+  assert.equal(result.headers.Host, "cn-hk-eq-01-09.bilivideo.com");
+  assert.match(result.url, /upsig=one$/);
+});
+
+test("keeps Akamai request hosts unchanged", () => {
+  const originalUrl =
+    "https://upos-hz-mirrorakam.akamaized.net/upgcxcode/video.m4s?hdnts=bound";
+  const result = runScript({
+    argument: "cdn=cn-hk-eq-01-09.bilivideo.com",
+    request: { url: originalUrl, headers: { Host: "upos-hz-mirrorakam.akamaized.net" } },
+  });
+  assert.equal(Object.keys(result).length, 0);
 });
